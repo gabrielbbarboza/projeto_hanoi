@@ -6,3 +6,8 @@ typedef struct Historico {
   int movimentos;
   int numDiscos;
   char dataHora[30];
+ struct Historico *proximo;
+} Historico;
+
+void adicionarHistorico(Historico **lista, const char *nome, int movimentos,
+                        int numDiscos, const char *dataHora);
