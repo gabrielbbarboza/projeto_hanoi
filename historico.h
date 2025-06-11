@@ -11,3 +11,7 @@ typedef struct Historico {
 
 void adicionarHistorico(Historico **lista, const char *nome, int movimentos,
                         int numDiscos, const char *dataHora);
+
+void exibirHistorico(Historico *lista);
+
+void salvarEmArquivo(Historico *lista, const char *nomeArquivo);
