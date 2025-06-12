@@ -13,3 +13,13 @@ int main() {
   carregarDoArquivo(&lista, "historico.txt");
 
   int opcao;
+
+  while (1) {
+    printf("\n=== Menu Principal ===\n");
+    printf("1. Jogar\n");
+    printf("2. Ver histórico\n");
+    printf("3. Buscar por nome ou data\n");
+    printf("4. Sair\n");
+    printf("Escolha uma opção: ");
+
+    opcao = lerInt("", 1, 4, 0);
