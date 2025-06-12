@@ -2,3 +2,7 @@
 #define TORRE_H
 
 #include "historico.h"
+void executarPartida(Historico **lista);
+
+#endif
+
