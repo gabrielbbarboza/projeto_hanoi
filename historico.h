@@ -15,3 +15,7 @@ void adicionarHistorico(Historico **lista, const char *nome, int movimentos,
 void exibirHistorico(Historico *lista);
 
 void salvarEmArquivo(Historico *lista, const char *nomeArquivo);
+
+void carregarDoArquivo(Historico **lista, const char *nomeArquivo);
+
+void liberarHistorico(Historico *lista);
