@@ -22,3 +22,9 @@ void liberarHistorico(Historico *lista);
 void buscarPorNomeOuData(Historico *lista, const char *termo);
 
 #endif
+void obterDataHoraAtual(char *buffer) {
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+  snprintf(buffer, 30, "%02d/%02d/%04d %02d:%02d", tm.tm_mday, tm.tm_mon + 1,
+           tm.tm_year + 1900, tm.tm_hour, tm.tm_min);
+}
