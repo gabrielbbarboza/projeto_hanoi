@@ -1,8 +1,8 @@
-#include "cronicas.h"
-#include <stdio.h>
+#include "cronicas.h" 
+#include "grimorio.h" 
+#include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
-#include <time.h> 
 
 void adicionarCronica(Cronica **lista, const char *nome, int movimentos,
                       int numDiscos, const char *dataHora) {
@@ -10,7 +10,7 @@ void adicionarCronica(Cronica **lista, const char *nome, int movimentos,
       malloc(sizeof(Cronica)); 
   if (!novo) {
     printf("Erro de memória: Não conseguimos registrar essa crônica agora. "
-           "Faltou espaço!\n");
+           "Faltou espaço!\\n");
     return;
   }
 
@@ -22,114 +22,94 @@ void adicionarCronica(Cronica **lista, const char *nome, int movimentos,
 
   strncpy(novo->dataHora, dataHora, sizeof(novo->dataHora) - 1);
   novo->dataHora[sizeof(novo->dataHora) - 1] = '\0';
-
-  novo->proximo =
-      NULL; 
-
-  if (*lista == NULL) {
-    *lista = novo;
-  } else {
-    Cronica *atual = *lista;
-    while (atual->proximo != NULL)
-      atual = atual->proximo;
-    atual->proximo = novo;
-  }
+  novo->proximo = NULL; 
+  novo->proximo = *lista;
+  *lista = novo;
 }
 
 void exibirCronicas(Cronica *lista) {
   if (lista == NULL) {
-    printf("Nosso pergaminho de crônicas está vazio. Nenhuma aventura "
-           "registrada ainda!\n");
+    printf("\nO Pergaminho de Crônicas ainda está em branco. Nenhuma lenda "
+           "registrada!\\n");
     return;
   }
 
-  printf("\n=== Livro de Crônicas Antigas ===\n");
-  
-  while (lista != NULL) {
+  printf("\n=== Crônicas Antigas ===\n");
+  Cronica *atual = lista; 
+  while (atual != NULL) { 
     printf("Aventureiro: %s | Feitos: %d movimentos | Discos: %d | Fim da "
            "Jornada: %s\n",
-           lista->nome, lista->movimentos, lista->numDiscos, lista->dataHora);
-    lista = lista->proximo;
+           atual->nome, atual->movimentos, atual->numDiscos, atual->dataHora);
+    atual = atual->proximo; 
   }
-  printf("===================================\n");
+  printf("========================\n");
 }
 
 void salvarCronicasEmArquivo(Cronica *lista, const char *nomeArquivo) {
-  FILE *arq =
-      fopen(nomeArquivo, "w");
-  if (!arq) {
-    printf("Erro: Não conseguimos abrir o pergaminho '%s' para escrever as "
-           "crônicas.\n",
-           nomeArquivo);
+  FILE *arquivo =
+      fopen(nomeArquivo,
+            "w");
+  if (!arquivo) {
+    printf(
+        "Guardião: Não foi possível selar as Crônicas no Pergaminho! Erro ao "
+        "abrir o arquivo.\n");
     return;
   }
 
-  while (lista != NULL) {
-    fprintf(arq, "%s;%d;%d;%s\n", lista->nome, lista->movimentos,
-            lista->numDiscos, lista->dataHora);
-    lista = lista->proximo;
+  Cronica *atual = lista;
+  while (atual != NULL) {
+    fprintf(arquivo, "%s,%d,%d,%s\\n", atual->nome, atual->movimentos,
+            atual->numDiscos, atual->dataHora);
+    atual = atual->proximo;
   }
 
-  fclose(arq);
+  fclose(arquivo); 
 }
 
 void carregarCronicasDoArquivo(Cronica **lista, const char *nomeArquivo) {
-  FILE *arq =
-      fopen(nomeArquivo, "r"); 
-  if (!arq) {
-
+  FILE *arquivo = fopen(nomeArquivo, "r"); 
+  if (!arquivo) {
+    printf("Guardião: O Pergaminho Antigo está lacrado ou vazio. Começando "
+           "um novo legado...\n");
+    *lista = NULL; 
     return;
   }
 
-  char linha[150]; /
-  while (fgets(linha, sizeof(linha), arq)) { 
-    linha[strcspn(linha, "\n")] = '\0';
+  char linha[256]; 
+  while (fgets(linha, sizeof(linha), arquivo) != NULL) {
 
-    char nome[50];
-    char dataHora[30];
-    int movimentos, numDiscos;
+    char *nomeStr = strtok(linha, ",");
+    char *movimentosStr = strtok(NULL, ",");
+    char *numDiscosStr = strtok(NULL, ",");
+    char *dataHoraStr = strtok(NULL, "\\n"); 
 
-    char *token = strtok(linha, ";");
-    if (!token) {
-      nome[0] = '\0';
-    } else {
-      strncpy(nome, token, sizeof(nome) - 1);
-      nome[sizeof(nome) - 1] = '\0';
+    if (nomeStr && movimentosStr && numDiscosStr && dataHoraStr) {
+      int movimentos = atoi(movimentosStr);
+      int numDiscos = atoi(numDiscosStr);
+
+      adicionarCronica(lista, nomeStr, movimentos, numDiscos, dataHoraStr);
     }
-
-    token = strtok(NULL, ";");
-    if (!token)
-      continue;
-    movimentos = atoi(token);
-
-    token = strtok(NULL, ";");
-    if (!token)
-      continue;
-    numDiscos = atoi(token);
-
-    token = strtok(NULL, ";");
-    if (!token)
-      continue;
-    strncpy(dataHora, token, sizeof(dataHora) - 1);
-    dataHora[sizeof(dataHora) - 1] = '\0';
-
-    adicionarCronica(lista, nome, movimentos, numDiscos, dataHora);
   }
 
-  fclose(arq); 
+  fclose(arquivo); 
+  printf("Guardião: As lendas antigas foram carregadas do Pergaminho.\n");
 }
 
 void liberarCronicas(Cronica *lista) {
-  while (lista) {
-    Cronica *aux = lista;
-    lista = lista->proximo;
-    free(aux); 
+  Cronica *atual = lista;
+  Cronica *proximo;
+  while (atual != NULL) {
+    proximo = atual->proximo;
+    free(atual);         
+    atual = proximo;        
   }
+  printf("Guardião: A memória das Crônicas foi purificada.\n");
 }
 
 void buscarCronicasPorNomeOuData(Cronica *lista, const char *termo) {
   if (lista == NULL) {
-    printf("Nosso pergaminho de crônicas está vazio. Não há o que buscar.\n");
+    printf("O Pergaminho de Crônicas está em branco. Nenhuma lenda para "
+           "buscar!\\n");
     return;
   }
 
@@ -138,6 +118,7 @@ void buscarCronicasPorNomeOuData(Cronica *lista, const char *termo) {
   Cronica *atual = lista;
 
   while (atual != NULL) {
+
     if (strstr(atual->nome, termo) != NULL ||
         strstr(atual->dataHora, termo) != NULL) {
       printf("Aventureiro: %s | Feitos: %d movimentos | Discos: %d | Fim da "
@@ -152,12 +133,4 @@ void buscarCronicasPorNomeOuData(Cronica *lista, const char *termo) {
     printf("Nenhuma crônica encontrada com o termo '%s'.\n", termo);
   }
   printf("===================================\n");
-}
-
-void obterDataHoraAtual(char *buffer) {
-  time_t t = time(NULL);         
-  struct tm tm = *localtime(&t); 
-
-  snprintf(buffer, 30, "%02d/%02d/%04d %02d:%02d", tm.tm_mday, tm.tm_mon + 1,
-           tm.tm_year + 1900, tm.tm_hour, tm.tm_min);
 }
