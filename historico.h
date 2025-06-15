@@ -19,3 +19,6 @@ void salvarEmArquivo(Historico *lista, const char *nomeArquivo);
 void carregarDoArquivo(Historico **lista, const char *nomeArquivo);
 
 void liberarHistorico(Historico *lista);
+void buscarPorNomeOuData(Historico *lista, const char *termo);
+
+#endif
