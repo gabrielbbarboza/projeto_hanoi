@@ -23,3 +23,30 @@ int main() {
     printf("Escolha uma opção: ");
 
     opcao = lerInt("", 1, 4, 0);
+
+    switch (opcao) {
+    case 1:
+      executarPartida(&lista);
+      break;
+    case 2:
+      exibirHistorico(lista);
+      break;
+    case 3: {
+      char termo[50];
+      printf("Digite o nome ou data para buscar: ");
+      if (fgets(termo, sizeof(termo), stdin)) {
+        termo[strcspn(termo, "\n")] = 0;
+        buscarPorNomeOuData(lista, termo);
+      }
+      break;
+    }
+    case 4:
+      printf("Até logo!\n");
+      liberarHistorico(lista);
+      return 0;
+    default:
+      printf("Opção inválida. Tente novamente.\n");
+    }
+  }
+  return 0;
+}
