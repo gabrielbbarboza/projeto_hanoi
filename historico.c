@@ -89,3 +89,33 @@ void carregarDoArquivo(Historico **lista, const char *nomeArquivo) {
 
   fclose(arq);
 }
+
+void liberarHistorico(Historico *lista) {
+  while (lista) {
+    Historico *aux = lista;
+    lista = lista->proximo;
+    free(aux);
+  }
+}
+
+void buscarPorNomeOuData(Historico *lista, const char *termo) {
+  if (lista == NULL) {
+    printf("Nenhum histórico para buscar.\n");
+    return;
+  }
+
+  printf("\nResultados para '%s':\n", termo);
+  int encontrados = 0;
+  while (lista != NULL) {
+    if (strstr(lista->nome, termo) != NULL ||
+        strstr(lista->dataHora, termo) != NULL) {
+      printf("Nome: %s | Movimentos: %d | Discos: %d | Data/Hora: %s\n",
+             lista->nome, lista->movimentos, lista->numDiscos, lista->dataHora);
+      encontrados++;
+    }
+    lista = lista->proximo;
+  }
+  if (encontrados == 0)
+    printf("Nenhum registro encontrado.\n");
+  printf("\n");
+}
