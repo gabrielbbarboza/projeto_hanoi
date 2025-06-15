@@ -53,3 +53,39 @@ void salvarEmArquivo(Historico *lista, const char *nomeArquivo) {
   }
   fclose(arq);
 }
+
+void carregarDoArquivo(Historico **lista, const char *nomeArquivo) {
+  FILE *arq = fopen(nomeArquivo, "r");
+  if (!arq)
+    return;
+
+  char linha[150];
+  while (fgets(linha, sizeof(linha), arq)) {
+    char nome[50], dataHora[30];
+    int movimentos, numDiscos;
+
+    char *token = strtok(linha, ";");
+    if (!token)
+      continue;
+    strncpy(nome, token, sizeof(nome));
+
+    token = strtok(NULL, ";");
+    if (!token)
+      continue;
+    movimentos = atoi(token);
+
+    token = strtok(NULL, ";");
+    if (!token)
+      continue;
+    numDiscos = atoi(token);
+
+    token = strtok(NULL, ";\n");
+    if (!token)
+      continue;
+    strncpy(dataHora, token, sizeof(dataHora));
+
+    adicionarHistorico(lista, nome, movimentos, numDiscos, dataHora);
+  }
+
+  fclose(arq);
+}
