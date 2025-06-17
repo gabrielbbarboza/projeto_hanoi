@@ -4,12 +4,16 @@
 #include <string.h> 
 #include <time.h> 
 
+// Função para limpar o buffer de entrada do teclado.
+
 void limparCanalComunicacao() {
   int c;
- 
   while ((c = getchar()) != '\n' && c != EOF)
     ;
 }
+
+// Função para validar um número inteiro a partir da entrada do usuário.
+// É uma função robusta para garantir que a entrada seja um número e dentro dos limites.
 
 int decifrarNumero(const char *prompt, int min, int max, int podeDesistir) {
   int numero;
@@ -41,18 +45,21 @@ int decifrarNumero(const char *prompt, int min, int max, int podeDesistir) {
   }
 }
 
+// Função para obter uma string (texto) do usuário de forma segura.
+// Evita estouro de buffer e lida com o caractere de nova linha.
+
 int obterTextoDoAventureiro(char *buffer, int tamanhoBuffer,
                             const char *prompt) {
   printf("%s", prompt);
   if (!fgets(buffer, tamanhoBuffer, stdin)) {
     return 0; 
   }
-
-
   buffer[strcspn(buffer, "\n")] = '\0';
 
   return 1;
 }
+
+// Função para obter a data e hora atuais e formatá-las em uma string.
 
 void obterDataHoraAtual(char *buffer) {
   time_t t = time(NULL); 
