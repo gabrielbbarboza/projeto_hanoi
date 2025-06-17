@@ -14,7 +14,7 @@ int main() {
     // Tenta carregar as crônicas de uma sessão anterior do arquivo.
   
   carregarCronicasDoArquivo(&pergaminhoCronicas,
-                            "cronicas.txt"); /
+                            "cronicas.txt");
 
   int escolhaAventureiro;
 
