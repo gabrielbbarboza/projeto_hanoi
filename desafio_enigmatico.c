@@ -3,12 +3,18 @@
 #include <stdlib.h>            
 #include <string.h> 
 
-#define MAX_DISC_ENIGMA 10
+// Define o número máximo de discos.
+
+#define MAX_DISC_ENIGMA 10   
+
+// Definição da estrutura Pinaculo (equivalente a uma pilha) para representar as colunas.
 
 typedef struct {
   int artefatos[MAX_DISC_ENIGMA]; 
   int topo; 
 } Pinaculo;
+
+// Função para preparar os pináculos no início do jogo, colocando todos os discos no primeiro.
 
 void prepararPinaculos(Pinaculo pinaculos[3], int numArtefatos) {
   for (int i = 0; i < 3; i++)
@@ -18,20 +24,37 @@ void prepararPinaculos(Pinaculo pinaculos[3], int numArtefatos) {
     pinaculos[0].artefatos[++pinaculos[0].topo] = i;
 }
 
+// Função para exibir o estado atual do reino (os três pináculos) com arte ASCII.
+// Recebe o array de pináculos e o número total de artefatos para dimensionamento correto.
+
 void exibirReino(Pinaculo pinaculos[3], int numArtefatos) {
   printf("\n--- O Salão das Três Colunas ---\n");
 
+// Calcula a largura máxima em caracteres que o maior disco ocuparia.
+
   int max_disk_char_width = (numArtefatos * 2) - 1;
+
+// Calcula a largura total de exibição para cada pináculo, incluindo espaços de preenchimento.
 
   int peg_display_width = max_disk_char_width + 2;
 
+// Itera de cima para baixo, que vai do disco mais alto para o mais baixo ou pino vazio.
+
   for (int i = numArtefatos - 1; i >= 0; i--) {
+
+        // Itera por cada um dos três pináculos.
+
     for (int j = 0; j < 3; j++) {
+
+      // Verifica se há um disco na posição 'i' (altura) do pináculo 'j'.
+      // "pinaculos[j].topo" é o índice do disco mais alto. Se 'i' for menor ou igual ao topo, há um disco ali.
+      
       if (pinaculos[j].topo >= i) {
         int disk_size = pinaculos[j].artefatos[i]; 
         int current_disk_char_width =
             (disk_size * 2) - 1;
-
+        
+        // Calcula o preenchimento necessário para centralizar o disco no espaço do pináculo.
      
         int padding_left = (peg_display_width - current_disk_char_width) / 2;
         int padding_right =
@@ -44,6 +67,10 @@ void exibirReino(Pinaculo pinaculos[3], int numArtefatos) {
         for (int k = 0; k < padding_right; k++)
           printf(" ");
       } else {
+
+         // Se não há disco na posição 'i' (altura), imprime um pino (representado por '|').
+        // Calcula o preenchimento para centralizar o pino.
+        
         int padding_left_peg =
             (peg_display_width - 1) / 2; 
         int padding_right_peg = peg_display_width - 1 - padding_left_peg;
@@ -66,6 +93,8 @@ void exibirReino(Pinaculo pinaculos[3], int numArtefatos) {
   }
   printf("\n");
 
+  // Imprime os números dos pináculos (1, 2, 3) abaixo da base.
+  
   for (int j = 0; j < 3; j++) {
     int padding_left_num =
         (peg_display_width - 1) / 2; 
@@ -81,13 +110,18 @@ void exibirReino(Pinaculo pinaculos[3], int numArtefatos) {
       "----------------------------------------------------------------\n"); 
 }
 
+// Função para mover um artefato (disco) de um pináculo de origem para um de destino.
+// Implementa as regras da Torre de Hanói.
+
 int moverArtefato(Pinaculo pinaculos[3], int origem, int destino) {
   origem--;
   destino--;
 
+    // Validações básicas: pináculos válidos e pináculo de origem não vazio.
+  
   if (origem < 0 || origem > 2 || destino < 0 || destino > 2) {
     printf(
-        "Guardião: Pináculo inválido. Escolha entre 1, 2 e 3.\n"); // Corrigido
+        "Guardião: Pináculo inválido. Escolha entre 1, 2 e 3.\n");
                                                             
     return 0; 
   }
@@ -99,7 +133,7 @@ int moverArtefato(Pinaculo pinaculos[3], int origem, int destino) {
   }
 
   int artefatoMovido = pinaculos[origem].artefatos[pinaculos[origem].topo];
-
+  
   if (pinaculos[destino].topo != -1 &&
       artefatoMovido > pinaculos[destino].artefatos[pinaculos[destino].topo]) {
     printf("Guardião: Pela Antiga Lei, um artefato maior não pode repousar "
@@ -107,6 +141,8 @@ int moverArtefato(Pinaculo pinaculos[3], int origem, int destino) {
     return 0;                    
   }
 
+  // Realiza o movimento: remove do topo da origem e adiciona ao topo do destino.
+  
   pinaculos[origem].topo--;
   pinaculos[destino].artefatos[++pinaculos[destino].topo] = artefatoMovido;
 
@@ -116,11 +152,15 @@ int moverArtefato(Pinaculo pinaculos[3], int origem, int destino) {
   return 1; 
 }
 
+// Função para verificar se o desafio da Torre de Hanói foi completado.
 
 int desafioCompleto(Pinaculo pinaculos[3], int numArtefatos) {
 
   return (pinaculos[2].topo == numArtefatos - 1);
 }
+
+// Função principal para iniciar o desafio da Torre de Hanói.
+// Esta é a função chamada pelo 'main' para iniciar o jogo.
 
 void iniciarDesafio(Cronica **listaCronicas) {
   char nomeAventureiro[50]; 
@@ -156,6 +196,9 @@ void iniciarDesafio(Cronica **listaCronicas) {
   }
 
   prepararPinaculos(pinaculos, numArtefatos); 
+
+    // exibirReino(pinaculos, numArtefatos); // Função para exibir o estado visual do jogo.
+
   exibirReino(pinaculos, numArtefatos);
 
   int origem, destino; 
@@ -181,6 +224,8 @@ void iniciarDesafio(Cronica **listaCronicas) {
       feitos++;                    
       exibirReino(pinaculos, numArtefatos); 
 
+      // exibirReino(pinaculos, numArtefatos); // Exibe o estado após movimento válido.
+
       if (desafioCompleto(pinaculos, numArtefatos)) {
         printf("\n============================================================="
                "====\n");
@@ -191,8 +236,14 @@ void iniciarDesafio(Cronica **listaCronicas) {
                "==\n");
 
         obterDataHoraAtual(dataHoraFim);
+
+        // Adiciona a crônica da vitória à lista.
+
         adicionarCronica(listaCronicas, nomeAventureiro, feitos, numArtefatos,
                          dataHoraFim);
+        
+        // Salva as crônicas atualizadas no arquivo.
+        
         salvarCronicasEmArquivo(*listaCronicas,
                                 "cronicas.txt"); 
         printf("Sua gloriosa crônica foi registrada no Pergaminho Antigo.\n");
