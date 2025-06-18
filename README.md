@@ -54,6 +54,9 @@ O Grimório da Sabedoria Antiga. Este cabeçalho contém protótipos para funç�
 
 Os Feitiços de Interação. Aqui estão as implementações das funções utilitárias que facilitam a interação com o jogador, tratando a entrada de dados de forma segura e validada.
 
+![image](https://github.com/user-attachments/assets/367a8a2a-4662-4deb-a4a8-8ecd653f32d3)
+
+
 #### Feitiços de Gratidão ####
 
 **site utilizado utilizado para codar e compilar:** https://replit.com/~
